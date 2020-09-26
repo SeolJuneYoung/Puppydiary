@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class Signup extends AppCompatActivity {
 
-    public static int set_flag;
+    public static int set_flag = 0;
     ActionBar actionBar;
     private ServiceApi service;
     private EditText email_check;

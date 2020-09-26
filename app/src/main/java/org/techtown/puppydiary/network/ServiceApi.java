@@ -102,7 +102,7 @@ public interface ServiceApi {
 
 
     @POST("/mypage/registermyinfo") //강아지 정보 등록/업데이트
-    Call<RegisterResponse> registerinfo (@Header("token") String token, @Body RegisterData data);
+    Call<RegisterResponse> registerinfo ( @Header("token") String token, @Body RegisterData data);
     /*
     {
         "puppyname" : "maru",
@@ -112,9 +112,9 @@ public interface ServiceApi {
     }
      */
 
-
+    @Multipart
     @POST("/user/profile") //프로필 사진 업데이트
-    Call<ProfileResponse> profile (@Header("token") String token, @Body ProfileData data);
+    Call<ProfileResponse> profile (@Part MultipartBody.Part profile, @Header("token") String token);
     /*
     form-date
     {

@@ -2,6 +2,8 @@ package org.techtown.puppydiary;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,7 +36,14 @@ import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +53,10 @@ import retrofit2.Response;
 
 public class MypuppyTab extends AppCompatActivity {
     ActionBar actionBar;
-
+    ImageView photoprofile;
     private ServiceApi service;
     private Call<MyinfoResponse> infodata;
-
+    de.hdodenhof.circleimageview.CircleImageView imageView;
     //public static String ;
     // public static Context context;
 
@@ -138,7 +148,8 @@ public class MypuppyTab extends AppCompatActivity {
         final TextView birth_ = findViewById(R.id.bd_input);
         final RadioButton option_male = (RadioButton) findViewById(R.id.male);
         final RadioButton option_female = (RadioButton) findViewById(R.id.female);
-
+       // photoprofile = (ImageView) findViewById(R.id.profile);
+        imageView = findViewById(R.id.profile);
         //mypuppyInfo();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -154,8 +165,16 @@ public class MypuppyTab extends AppCompatActivity {
                     String result = "";
 
                     for(MyinfoResponse.Myinfo myinfo1 : my) {
+
+                        //myinfo1.getImage();
+                        //String requestURL = myinfo1.getImage();
+                        String requestURL = my.get(0).getImage();
+                        Log.d("requestURL", requestURL);
+                        Glide.with(MypuppyTab.this).load(requestURL).into(imageView);
+
+
                         if( myinfo1.getPuppyname().equals("") ){
-                            puppy_name.setText("ihi");
+                            puppy_name.setText("댕댕이");
                         }
                         else {
                             puppy_name.setText(myinfo1.getPuppyname());
@@ -164,7 +183,7 @@ public class MypuppyTab extends AppCompatActivity {
                         age_.setText("" + myinfo1.getAge());
 
                         if(myinfo1.getBirth().equals("")){
-                            birth_.setText("24살");
+                            birth_.setText("몇살인가요?");
                         }
                         else {
                             birth_.setText(myinfo1.getBirth());
@@ -177,6 +196,33 @@ public class MypuppyTab extends AppCompatActivity {
                         else if ( gender == 2) {
                             option_female.setChecked(true);
                         }
+                        Log.d("profileURL",  requestURL);
+//                        URL url = null;
+//                        try {
+//                            url = new URL(profile);
+//                        } catch (MalformedURLException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//
+//                            URL url = new URL(requestURL);
+//                            InputStream is = url.openStream();
+//                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                            profilephoto.setImageBitmap(bitmap);
+//
+//                        } catch (IOException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+
+
+
+//                        URLConnection conn = url.openConnection();
+//                        conn.connect();
+//                        BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+//                        Bitmap bm = BitmapFactory.decodeStream(bis);
+//                        bis.close();
+//                        profile.setImageBitmap(bm);
 
                         // result = myinfo1.getPuppyname();
                         // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();;

@@ -5,6 +5,7 @@ public class MyinfoData {
     private String token;
 
     public MyinfoData(String token) {
+
         this.token = token;
     }
 
