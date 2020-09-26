@@ -1,8 +1,10 @@
 package org.techtown.puppydiary;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
 import com.bumptech.glide.Glide;
@@ -75,12 +79,21 @@ public class SetPuppy extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
         actionBar.setIcon(R.drawable.logo);
-        actionBar.setDisplayUseLogoEnabled(true) ;
-        actionBar.setDisplayShowHomeEnabled(true) ;
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
 
         HashMap<String, String>header = new HashMap<>();
         service = RetrofitClient.getClient().create(ServiceApi.class);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+        }
 
         TextView textView = findViewById(R.id.textView);
         SpannableString content = new SpannableString("우리 집 댕댕이는요");
@@ -175,7 +188,6 @@ public class SetPuppy extends AppCompatActivity {
                         // result = myinfo1.getPuppyname();
                         // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();;
                     }
-
                 }
             }
 
@@ -189,7 +201,7 @@ public class SetPuppy extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                button.setBackgroundColor( Color.parseColor("#ed426e"));
+                button.setBackgroundColor( Color.parseColor("#D6336B"));
 
 
                 if( !(puppy_name.getText().equals(""))) {
