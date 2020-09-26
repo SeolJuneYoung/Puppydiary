@@ -36,7 +36,7 @@ public class MoneyCalendar extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
 
-        actionBar.setIcon(R.drawable.name) ;
+        actionBar.setIcon(R.drawable.logo) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 

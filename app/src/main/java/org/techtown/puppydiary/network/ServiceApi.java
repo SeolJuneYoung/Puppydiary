@@ -1,15 +1,11 @@
 package org.techtown.puppydiary.network;
 
-import org.techtown.puppydiary.Login;
-import org.techtown.puppydiary.network.Data.EmailData;
 import org.techtown.puppydiary.network.Data.account.AccountUpdateData;
-import org.techtown.puppydiary.network.Data.calendar.CalendarPhotoData;
 import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
 import org.techtown.puppydiary.network.Data.CheckemailData;
 import org.techtown.puppydiary.network.Data.FindpwData;
 import org.techtown.puppydiary.network.Data.account.InsertAccountData;
 import org.techtown.puppydiary.network.Data.KgupdateData;
-import org.techtown.puppydiary.network.Data.ProfileData;
 import org.techtown.puppydiary.network.Data.RegisterData;
 import org.techtown.puppydiary.network.Data.SigninData;
 import org.techtown.puppydiary.network.Data.SignupData;
@@ -114,7 +110,7 @@ public interface ServiceApi {
 
 
     @POST("/user/profile") //프로필 사진 업데이트
-    Call<ProfileResponse> profile (@Header("token") String token, @Body ProfileData data);
+    Call<ProfileResponse> profile (@Header("Access-Token") String header, @Part MultipartBody.Part imageFile);
     /*
     form-date
     {
@@ -134,13 +130,12 @@ public interface ServiceApi {
 
     @Multipart
     @POST("/calendar/{year}/{month}/{date}/photo") //달력 사진 업로드
-    Call<CalendarPhotoResponse> calendarphoto (@Part MultipartBody.Part profile, @Header("token") String token, @Path("year") int year, @Path("month") int month, @Path("date") int date); //@Body CalendarPhotoData data,
+    Call<CalendarPhotoResponse> calendarphoto (@Part MultipartBody.Part img, @Header("token") String token, @Path("year") int year, @Path("month") int month, @Path("date") int date); //@Body CalendarPhotoData data,
 
     @POST("/calendar/update") //달력 update
     Call<CalendarUpdateResponse> calendarupdate (@Header("token") String token, @Body CalendarUpdateData data);
 
     @GET("/kg/show/{year}") //kg 조회
-        //Call<ShowKgResponse> showkg (@Header("token") String token, @Path("year") int year);
     Call<ShowKgResponse> showkg (@Header("token") String token, @Path("year") int year);
 
     @POST("/kg/update") //kg update

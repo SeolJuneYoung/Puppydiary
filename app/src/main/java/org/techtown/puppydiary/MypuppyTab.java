@@ -59,7 +59,7 @@ public class MypuppyTab extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -161,9 +161,9 @@ public class MypuppyTab extends AppCompatActivity {
                             puppy_name.setText(myinfo1.getPuppyname());
                         }
 
-                        age_.setText("" + myinfo1.getAge());
+                        age_.setText("" + myinfo1.getAge()+ "살");
 
-                        if(myinfo1.getBirth().equals("")){
+                        if(myinfo1.getBirth() == null){
                             birth_.setText("24살");
                         }
                         else {

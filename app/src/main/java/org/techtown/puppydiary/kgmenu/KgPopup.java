@@ -49,7 +49,6 @@ public class KgPopup extends AppCompatActivity {
     Button okay;
     Button close;
     int year;
-    int month;
     private ServiceApi service;
     public int userIdx = 31;
 
@@ -60,13 +59,13 @@ public class KgPopup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_kg_upload);
 
-        //final DBHelper_kg dbHelper = new DBHelper_kg(getApplicationContext(), "KG.db", null, 1);
+        final DBHelper_kg dbHelper = new DBHelper_kg(getApplicationContext(), "KG.db", null, 1);
 
         // MoneyEdit.context = getApplicationContext();
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy) ;
+        actionBar.setIcon(R.drawable.logo) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -99,71 +98,59 @@ public class KgPopup extends AppCompatActivity {
 
                 if(monthname.equals("January")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 1;
                     //dbHelper.insert(userIdx, year, 1, puppykg);
                     //double.parsedouble을 이용해서 string이었던 "3.5"를 double로 형변환시켜주어 저장 -> 저장 후 kgTab으로 가져감 (이 코드는 kgTab에 있음)
                 }
                 else if(monthname.equals("February")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 2;
                     // dbHelper.insert(userIdx, year, 2, puppykg);
                 }
                 else if(monthname.equals("March")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 3;
                     // dbHelper.insert(userIdx, year, 3, puppykg);
                 }
                 else if(monthname.equals("April")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 4;
                     //dbHelper.insert(userIdx, year, 4, puppykg);
                 }
                 else if(monthname.equals("May")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 5;
                     // dbHelper.insert(userIdx, year, 5, puppykg);
                 }
                 else if(monthname.equals("June")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 6;
                     //dbHelper.insert(userIdx, year, 6, puppykg);
                 }
                 else if(monthname.equals("July")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 7;
                     //dbHelper.insert(userIdx, year, 7, puppykg);
                 }
                 else if(monthname.equals("August")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 8;
                     //dbHelper.insert(userIdx, year, 8, puppykg);
                 }
                 else if(monthname.equals("September")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 9;
                     //dbHelper.insert(userIdx, year, 9, puppykg);
                 }
                 else if(monthname.equals("October")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 10;
                     //dbHelper.insert(userIdx, year, 10, puppykg);
                 }
                 else if(monthname.equals("November")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 11;
                     //dbHelper.insert(userIdx, year, 11, puppykg);
                 }
                 else if(monthname.equals("December")) {
                     puppykg = Double.parseDouble(kgStr);
-                    month = 12;
                     //dbHelper.insert(userIdx, year, 12, puppykg);
                 }
 
-                UpdateKg(new KgupdateData(year, month, puppykg));
+                UpdateKg(new KgupdateData(year, monthname, puppykg));
 
-                //Intent intent_kgclose = new Intent(KgPopup.this, KgTab.class); //년도 전달함
-                //intent_kgclose.putExtra("year", year);
-                //startActivity(intent_kgclose);
+                Intent intent_kgclose = new Intent(KgPopup.this, KgTab.class); //년도 전달함
+                intent_kgclose.putExtra("year", year);
+                startActivity(intent_kgclose);
 
                 //Log.d("kg1", "kg1" + kgStr);
                 //Log.d("kg2", "kg2" + ((EditText)findViewById(R.id.kg_weight)).getText().toString());
@@ -175,7 +162,7 @@ public class KgPopup extends AppCompatActivity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                close.setBackgroundColor( Color.parseColor("#ed426e"));
+                close.setBackgroundColor( Color.parseColor("#D6336B"));
                 Intent intent_kgclose = new Intent(getApplicationContext(), KgTab.class); //일단 바로 검색결과 띄음
                 startActivity(intent_kgclose);
             }
@@ -194,7 +181,6 @@ public class KgPopup extends AppCompatActivity {
 
                 if(result.getSuccess() == true){
                     Intent intent_start = new Intent(getApplicationContext(), KgTab.class);
-                    intent_start.putExtra("year",year);
                     startActivityForResult(intent_start, 2000);
                 }
             }

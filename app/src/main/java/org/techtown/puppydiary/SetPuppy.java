@@ -73,7 +73,7 @@ public class SetPuppy extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy) ;
+        actionBar.setIcon(R.drawable.logo) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -134,8 +134,6 @@ public class SetPuppy extends AppCompatActivity {
         final RadioButton option_male = (RadioButton) findViewById(R.id.male);
         final RadioButton option_female = (RadioButton) findViewById(R.id.female);
 
-
-
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String token = sp.getString("TOKEN", "");
         final Call<MyinfoResponse> getCall = service.Getmyinfo(token);
@@ -182,7 +180,7 @@ public class SetPuppy extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                button.setBackgroundColor( Color.parseColor("#ed426e"));
+                button.setBackgroundColor( Color.parseColor("#D6336B"));
 
                 if( !(puppy_name.getText().equals(""))) {
                     String puppyname = puppy_name.getText().toString();
@@ -197,8 +195,7 @@ public class SetPuppy extends AppCompatActivity {
                     }
 
                     infoInputCheck(new RegisterData(puppyname, age, birth, gender));
-                    Intent intent_calendar = new Intent(getApplicationContext(), CalendarTab.class);
-                    startActivity(intent_calendar);
+                    finish();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "인자가 입력되지 않았습니다", Toast.LENGTH_LONG).show();
@@ -227,7 +224,7 @@ public class SetPuppy extends AppCompatActivity {
 
                     Uri photoUri = data.getData();
                     String absolutePath =  getPath(photoUri);
-                    //Toast.makeText(getApplicationContext(), ""+photoUri, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), ""+absolutePath, Toast.LENGTH_LONG).show();
 
                     profilePhoto(new ProfileData("profile", absolutePath));
 
@@ -248,6 +245,7 @@ public class SetPuppy extends AppCompatActivity {
     private void profilePhoto(final ProfileData data){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String token = sp.getString("TOKEN", "");
+        /*
         service.profile(token, data).enqueue(new Callback<ProfileResponse>() {
             @Override
             public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
@@ -260,7 +258,7 @@ public class SetPuppy extends AppCompatActivity {
             public void onFailure(Call<ProfileResponse> call, Throwable t) {
 
             }
-        });
+        });*/
     }
 
     private void infoInputCheck(final RegisterData data){

@@ -1,10 +1,8 @@
 package org.techtown.puppydiary;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,7 +47,7 @@ public class Signup extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -116,15 +114,6 @@ public class Signup extends AppCompatActivity {
                 Toast.makeText(Signup.this, result.getMessage(), Toast.LENGTH_SHORT).show();
 
                 if (result.getSuccess() == true) {
-
-                    String jwtToken = result.getJwtToken();
-
-                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("TOKEN", jwtToken).apply();
-
-
-
                     Intent intent = new Intent(getApplicationContext(), SetPuppy.class);
                     startActivity(intent);
                     finish();

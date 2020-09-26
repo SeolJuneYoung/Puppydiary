@@ -112,7 +112,7 @@ public class CalendarDetail extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.name) ;
+        actionBar.setIcon(R.drawable.logo) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -455,51 +455,15 @@ public class CalendarDetail extends AppCompatActivity {
             mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
             Log.d("경로 확인 >> ", "$selectedImg  /  $absolutePath");
 
-            MultipartBody.Builder builder=new MultipartBody.Builder();
-
-            builder.setType(MultipartBody.FORM);
-            Log.e("CalendarPhoto",  "1");
-            builder.addFormDataPart("key", "profile");
-//       mediaPath = getRealPathFromURI()
-            builder.addFormDataPart("values", mediaPath);
 
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String token = sp.getString("TOKEN", "");
 
-
-
-
-            //MultipartBody requestBody = builder.build();
-            // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
-
-//                      RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            //MultipartBody requestFile = builder.build();
-            //RequestBody requestBody = builder.build();
-            //builder.build();
-            //requestBody = MultipartBody.create( MediaType.parse("image/jpeg"), file);
-
-//            RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-//            builder.addFormDataPart("photo",file.getName(),requestBody);
-//            requestBody = builder.build();
-////            requestFile = (MultipartBody) MultipartBody.create(requestBody);
-//            requestFile = MultipartBody.Part.create(requestBody);
             File file = new File(mediaPath);
-            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
-            //String filename = mediaPath.substring(mediaPath.lastIndexOf("/")+1);
-
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("key", mediaPath, RequestBody.create(MEDIA_TYPE_PNG, mediaPath))
-                    .addFormDataPart("profile", "photo_image")
-                    .build();
-
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
             MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
+
             Toast.makeText(this, "사진 업로드 성공" + mediaPath, Toast.LENGTH_LONG).show();
-            //Toast.makeText(this, "사진 업로드 성공" + String.valueOf(fileToUpload), Toast.LENGTH_LONG).show();
-//            service = RetrofitClient.getClient().create(ServiceApi.class);
-//
-//            final Call<CalendarPhotoResponse> getCall = service.calendarphoto(fileToUpload, token, year, month, date);
-//            getCall.enqueue(new Callback<CalendarPhotoResponse>() {
 
             service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
                 @Override
@@ -512,7 +476,7 @@ public class CalendarDetail extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
                     Toast.makeText(CalendarDetail.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
-
+                    Log.d("에러",  t.getMessage());
                 }
             });
             Log.d("이미지", String.valueOf(selectedImage));
@@ -520,51 +484,6 @@ public class CalendarDetail extends AppCompatActivity {
         }else{
             Toast.makeText(this, "사진 업로드 실패", Toast.LENGTH_LONG).show();
         }
-//        if(requestCode== REQUEST_CODE && resultCode==RESULT_OK && data!=null) {
-//            selectedImage = data.getData();
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            image_upload.setImageBitmap(bitmap);
-//            isImgFilled = true;
-//
-//        } else {
-//            Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
-//        }
 
-//
-//        if (requestCode == REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                try {
-//
-//                    selectedImage = data.getData();
-//                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-//                    image_upload.setImageBitmap(bitmap);
-//
-//
-//                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//                    //assert cursor != null;
-//                    cursor.moveToFirst();
-//                    mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-//
-//                    //int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                    //mediaPath = cursor.getString(columnIndex);
-//                    Log.e("mediaPath_",  mediaPath);
-//                    image_upload.setImageURI(selectedImage);
-//                    CalendarPhoto();
-//
-//                    cursor.close();
-
-//                } catch (Exception e) {
-//
-//                }
-//            }
-//            else if(resultCode == RESULT_CANCELED) {
-//                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
-//            }
     }
 }
