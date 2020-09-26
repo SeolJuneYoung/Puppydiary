@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,10 +22,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.techtown.puppydiary.kgmenu.KgTab;
 import org.techtown.puppydiary.MypuppyTab;
 import org.techtown.puppydiary.R;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
+import org.techtown.puppydiary.kgmenu.KgTab;
 import org.techtown.puppydiary.network.Data.calendar.ShowDayData;
 import org.techtown.puppydiary.network.Response.calendar.ShowDayResponse;
 import org.techtown.puppydiary.network.Response.calendar.ShowMonthResponse;
@@ -99,7 +98,7 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.name);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 

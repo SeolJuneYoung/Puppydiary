@@ -1,7 +1,10 @@
 package org.techtown.puppydiary.calendarmenu;
 //import android.R.attr.path;
+
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.techtown.puppydiary.R;
 import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
@@ -83,9 +88,9 @@ public class CalendarDetail extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.name) ;
-        actionBar.setDisplayUseLogoEnabled(true) ;
-        actionBar.setDisplayShowHomeEnabled(true) ;
+        actionBar.setIcon(R.drawable.logo);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         //final DBHelper_cal dbHelper = new DBHelper_cal(getApplicationContext(), "caltest.db", null, 1);
         final Intent intent = new Intent(getIntent());
@@ -111,6 +116,15 @@ public class CalendarDetail extends AppCompatActivity {
 
         image_upload = (ImageView) findViewById(R.id.image_upload);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+        }
+
         //기본세팅
         waterdrop_btn2.setVisibility(View.INVISIBLE);
         waterdrop_btn.setVisibility(View.VISIBLE);
@@ -123,7 +137,7 @@ public class CalendarDetail extends AppCompatActivity {
         showday.enqueue(new Callback<ShowDayResponse>() {
             @Override
             public void onResponse(Call<ShowDayResponse> call, Response<ShowDayResponse> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     ShowDayResponse showday = response.body();
                     List<ShowDayResponse.ShowDay> my = showday.getData();
                     if (my != null) {
@@ -138,24 +152,24 @@ public class CalendarDetail extends AppCompatActivity {
                         }
                         state_waterdrop = my.get(0).getWater();
                         state_injection = my.get(0).getInject();
-                        if (state_waterdrop == 1 && state_injection == 0){
+                        if (state_waterdrop == 1 && state_injection == 0) {
                             // 물방울만 색깔 있을 때
                             waterdrop_btn2.setVisibility(View.VISIBLE);
                             waterdrop_btn.setVisibility(View.INVISIBLE);
                             injection_btn2.setVisibility(View.INVISIBLE);
                             injection_btn.setVisibility(View.VISIBLE);
-                        } else if (state_waterdrop == 0 && state_injection == 1){
+                        } else if (state_waterdrop == 0 && state_injection == 1) {
                             // 주사기만 색깔 있을 때
                             waterdrop_btn2.setVisibility(View.INVISIBLE);
                             waterdrop_btn.setVisibility(View.VISIBLE);
                             injection_btn2.setVisibility(View.VISIBLE);
                             injection_btn.setVisibility(View.INVISIBLE);
-                        } else if (state_waterdrop == 1 && state_injection == 1){
+                        } else if (state_waterdrop == 1 && state_injection == 1) {
                             waterdrop_btn2.setVisibility(View.VISIBLE);
                             waterdrop_btn.setVisibility(View.INVISIBLE);
                             injection_btn2.setVisibility(View.VISIBLE);
                             injection_btn.setVisibility(View.INVISIBLE);
-                        } else if (state_waterdrop == 0 && state_injection == 0){
+                        } else if (state_waterdrop == 0 && state_injection == 0) {
                             waterdrop_btn2.setVisibility(View.INVISIBLE);
                             waterdrop_btn.setVisibility(View.VISIBLE);
                             injection_btn2.setVisibility(View.INVISIBLE);
@@ -172,7 +186,7 @@ public class CalendarDetail extends AppCompatActivity {
             }
         });
 
-        tv_date.setText(year + ". " + (month+1) + ". " + date);
+        tv_date.setText(year + ". " + (month + 1) + ". " + date);
 
 
         // on
@@ -237,7 +251,7 @@ public class CalendarDetail extends AppCompatActivity {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                save_btn.setBackgroundColor( Color.parseColor("#D6336B"));
+                save_btn.setBackgroundColor(Color.parseColor("#D6336B"));
                 memo = memo_et.getText().toString();
 //                Log.e("save",  mediaPath);
                 CalendarUpdate(new CalendarUpdateData(year, month, date, memo, state_injection, state_waterdrop));
@@ -249,7 +263,7 @@ public class CalendarDetail extends AppCompatActivity {
         cancel_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancel_btn.setBackgroundColor( Color.parseColor("#D6336B"));
+                cancel_btn.setBackgroundColor(Color.parseColor("#D6336B"));
                 finish();
             }
         });
@@ -267,7 +281,7 @@ public class CalendarDetail extends AppCompatActivity {
 
             MultipartBody.Builder builder = new MultipartBody.Builder();
             builder.setType(MultipartBody.FORM);
-            Log.e("CalendarPhoto",  "1");
+            Log.e("CalendarPhoto", "1");
             builder.addFormDataPart("key", "profile");
 //       mediaPath = getRealPathFromURI()
             builder.addFormDataPart("values", mediaPath);
@@ -291,38 +305,24 @@ public class CalendarDetail extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
-                    if(response.isSuccessful()) {
+                    if (response.isSuccessful()) {
                         CalendarPhotoResponse result = response.body();
                         Toast.makeText(CalendarDetail.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
                     Toast.makeText(CalendarDetail.this, "통신 실패", Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        } else {
             Toast.makeText(this, "사진 업로드 실패", Toast.LENGTH_LONG).show();
         }
     }
 
 
-    private String getRealPathFromURI(Uri contentURI) {
-        String filePath;
-
-        Cursor cursor = new CalendarDetail().getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) {
-            filePath = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            filePath = cursor.getString(idx);
-            cursor.close();
-        }
-        return filePath;
-    }
-
-    private void CalendarUpdate(CalendarUpdateData data){
+    private void CalendarUpdate(CalendarUpdateData data) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String token = sp.getString("TOKEN", "");
 
@@ -331,7 +331,7 @@ public class CalendarDetail extends AppCompatActivity {
             public void onResponse(Call<CalendarUpdateResponse> call, Response<CalendarUpdateResponse> response) {
                 CalendarUpdateResponse result = response.body();
                 // Toast.makeText(CalendarDetail.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-                if(result.getSuccess() == true) {
+                if (result.getSuccess() == true) {
                     Intent intent_month = new Intent(getApplicationContext(), CalendarTab.class);
                     intent_month.putExtra("after_year", year);
                     intent_month.putExtra("after_month", month);
@@ -350,61 +350,7 @@ public class CalendarDetail extends AppCompatActivity {
     }
 
 
-//    private void CalendarPhoto(){
-//
-//        // File file = new File(mediaPath);
-//        //  RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-file"), file);
-//        // MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
-//
-//        Cursor cursor = getContentResolver().query(Uri.parse(selectedImage.toString()), null, null, null, null);
-//        //assert cursor != null;
-//        cursor.moveToFirst();
-//        mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-//        Log.d("경로 확인 >> " , "$selectedImg  /  $absolutePath");
-//
-////        MultipartBody.Builder builder = new MultipartBody.Builder();
-////        builder.setType(MultipartBody.FORM);
-////        Log.e("CalendarPhoto",  "1");
-////        builder.addFormDataPart("key", "profile");
-//////        mediaPath = getRealPathFromURI()
-////        builder.addFormDataPart("values", mediaPath);
-//
-////        ClipData clipData = data.getClipData();
-////        Uri tempUri;
-////        tempUri = clipData.getItemAt(0).getUri();
-////        mediaPath = tempUri.toString();
-//
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        String token = sp.getString("TOKEN", "");
-//
-//        File file = new File(mediaPath);
-//        RequestBody requestFile  = RequestBody.create(MediaType.parse("image/jpeg"), file);
-//        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestFile);
-//
-//        //Toast.makeText(CalendarDetail.this, token, Toast.LENGTH_SHORT).show();
-////        mediaPath = mediaPath + ".png";
-////        File file = new File(mediaPath);
-////        //Log.e("mediapath" , mediapath);
-////        MultipartBody requestBody = builder.build();
-////
-////        RequestBody requestFile  = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-////        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
-//
-//
-//        service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
-//            @Override
-//            public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
-//                CalendarPhotoResponse result = response.body();
-//                Toast.makeText(CalendarDetail.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

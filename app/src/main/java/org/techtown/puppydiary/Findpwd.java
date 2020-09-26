@@ -1,9 +1,7 @@
 package org.techtown.puppydiary;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.techtown.puppydiary.network.Data.FindpwData;
 import org.techtown.puppydiary.network.Response.FindpwResponse;
-import org.techtown.puppydiary.network.Response.SigninResponse;
-import org.techtown.puppydiary.network.Response.SignupResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
@@ -42,7 +38,7 @@ public class Findpwd extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 

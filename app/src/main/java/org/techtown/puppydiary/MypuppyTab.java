@@ -7,39 +7,29 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
-import static org.techtown.puppydiary.Signup.set_flag;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
 import org.techtown.puppydiary.kgmenu.KgTab;
-import org.techtown.puppydiary.network.Data.MyinfoData;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static org.techtown.puppydiary.Signup.set_flag;
 
 public class MypuppyTab extends AppCompatActivity {
     ActionBar actionBar;
@@ -59,7 +49,7 @@ public class MypuppyTab extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -161,9 +151,9 @@ public class MypuppyTab extends AppCompatActivity {
                             puppy_name.setText(myinfo1.getPuppyname());
                         }
 
-                        age_.setText("" + myinfo1.getAge());
+                        age_.setText("" + myinfo1.getAge()+ "살");
 
-                        if(myinfo1.getBirth().equals("")){
+                        if(myinfo1.getBirth() == null){
                             birth_.setText("24살");
                         }
                         else {

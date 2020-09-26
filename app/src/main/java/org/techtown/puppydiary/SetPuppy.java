@@ -1,9 +1,10 @@
 package org.techtown.puppydiary;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +17,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +29,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
@@ -40,18 +42,13 @@ import org.techtown.puppydiary.network.Response.RegisterResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import static org.techtown.puppydiary.Signup.set_flag;
 //import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -73,13 +70,21 @@ public class SetPuppy extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy) ;
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
 
-        HashMap<String, String>header = new HashMap<>();
         service = RetrofitClient.getClient().create(ServiceApi.class);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+        }
 
         TextView textView = findViewById(R.id.textView);
         SpannableString content = new SpannableString("우리 집 댕댕이는요");
