@@ -389,7 +389,6 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
             public ImageView waterdrop;
             public ImageView injection;
             public TextView tvItem;
-
         }
 
     }

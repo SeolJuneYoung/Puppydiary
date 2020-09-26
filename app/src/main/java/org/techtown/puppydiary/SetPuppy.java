@@ -1,13 +1,10 @@
 package org.techtown.puppydiary;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
@@ -29,12 +26,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
+import com.bumptech.glide.Glide;
+
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
-import org.techtown.puppydiary.network.Data.ProfileData;
 import org.techtown.puppydiary.network.Data.RegisterData;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.Response.ProfileResponse;
@@ -42,10 +38,15 @@ import org.techtown.puppydiary.network.Response.RegisterResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,8 +60,11 @@ public class SetPuppy extends AppCompatActivity {
     ActionBar actionBar;
     private ServiceApi service;
     Button button;
+    String mediaPath;
+    Uri selectedImage;
     TextView b_day;
     DatePickerDialog dialog;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,16 +79,8 @@ public class SetPuppy extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true) ;
 
 
+        HashMap<String, String>header = new HashMap<>();
         service = RetrofitClient.getClient().create(ServiceApi.class);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1);
-            }
-        }
 
         TextView textView = findViewById(R.id.textView);
         SpannableString content = new SpannableString("우리 집 댕댕이는요");
@@ -122,10 +118,13 @@ public class SetPuppy extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(intent, REQUEST_CODE);
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE);
+
                 //Intent intent = new Intent();
                 //intent.setType("image/*");
                 //intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -154,6 +153,9 @@ public class SetPuppy extends AppCompatActivity {
                     String result = "";
 
                     for(MyinfoResponse.Myinfo myinfo1 : my) {
+                        String requestURL = myinfo1.getImage();
+                        Glide.with(SetPuppy.this).load(requestURL).into(imageView);
+
                         puppy_name.setText(myinfo1.getPuppyname());
                         age_.setText("" + myinfo1.getAge());
                         if (age_.getText().equals("0")){
@@ -189,6 +191,7 @@ public class SetPuppy extends AppCompatActivity {
             public void onClick(View view) {
                 button.setBackgroundColor( Color.parseColor("#ed426e"));
 
+
                 if( !(puppy_name.getText().equals(""))) {
                     String puppyname = puppy_name.getText().toString();
                     Integer age = Integer.parseInt("" + age_.getText());
@@ -201,9 +204,17 @@ public class SetPuppy extends AppCompatActivity {
                         gender = 2;
                     }
 
+                    UpdatePhoto();
                     infoInputCheck(new RegisterData(puppyname, age, birth, gender));
-                    Intent intent_calendar = new Intent(getApplicationContext(), CalendarTab.class);
-                    startActivity(intent_calendar);
+
+//                    if(set_flag==1) {
+//                        Intent intent_calendar = new Intent(getApplicationContext(), CalendarTab.class);
+//                        startActivity(intent_calendar);
+//                    }else{
+//                        Intent intent_showmyinfo = new Intent(getApplicationContext(), MypuppyTab.class);
+//                        startActivity(intent_showmyinfo);
+//                    }
+
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "인자가 입력되지 않았습니다", Toast.LENGTH_LONG).show();
@@ -216,57 +227,68 @@ public class SetPuppy extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String token = sp.getString("TOKEN", "");
-        String filename = "";
 
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                try {
-                    // img를 bitmap으로 받아옴
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    Bitmap bitmap = BitmapFactory.decodeStream(in);
+        if(requestCode== REQUEST_CODE && resultCode==RESULT_OK && data!=null) {
+            selectedImage = data.getData();
+            Uri photoUri = data.getData();
+//            // img를 bitmap으로 받아옴
+//            InputStream in = null;
+//            try {
+//                in = getContentResolver().openInputStream(data.getData());
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            Bitmap bitmap = BitmapFactory.decodeStream(in);
+//
+//            bitmap = rotateImage(bitmap, 90);
 
-                    bitmap = rotateImage(bitmap, 90);
-                    imageView.setImageBitmap(bitmap);
-
-                    Uri photoUri = data.getData();
-                    String absolutePath =  getPath(photoUri);
-                    //Toast.makeText(getApplicationContext(), ""+photoUri, Toast.LENGTH_LONG).show();
-
-                    profilePhoto(new ProfileData("profile", absolutePath));
-
-                    in.close();
-
-                    //imageView.setImageBitmap(bitmap);
-
-                } catch (Exception e) {
-
-                }
+//            imageView.setImageBitmap(bitmap);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+                bitmap = rotateImage(bitmap, 90);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            else if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+            //이미지가 한계이상(?) 크면 불러 오지 못하므로 사이즈를 줄여 준다.
+//            int nh = (int) (bitmap.getHeight() * (1024.0 / bitmap.getWidth()));
+//            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 1024, nh, true);
+            imageView.setImageBitmap(bitmap);
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            Cursor cursor = getContentResolver().query(Uri.parse(selectedImage.toString()), null, null, null, null);
+            assert cursor != null;
+            cursor.moveToFirst();
+            mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+            Log.d("경로 확인 >> ", "$selectedImg  /  $absolutePath");
+
+        }else{
+            Toast.makeText(this, "사진 업로드 실패", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void profilePhoto(final ProfileData data){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String token = sp.getString("TOKEN", "");
-        service.profile(token, data).enqueue(new Callback<ProfileResponse>() {
-            @Override
-            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
-                ProfileResponse result = response.body();
-
-                Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<ProfileResponse> call, Throwable t) {
-
-            }
-        });
-    }
+//    private void profilePhoto(final ProfileData data){
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        String token = sp.getString("TOKEN", "");
+//        service.profile(token, data).enqueue(new Callback<ProfileResponse>() {
+//            @Override
+//            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+//                ProfileResponse result = response.body();
+//
+//                Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ProfileResponse> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 
     private void infoInputCheck(final RegisterData data){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -276,18 +298,15 @@ public class SetPuppy extends AppCompatActivity {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 RegisterResponse result = response.body();
-
-                Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                 if(result.getMessage().equals("강아지 정보 등록 성공")){
-                    if(set_flag == 0) {
-                        Intent intent = new Intent(getApplicationContext(), CalendarTab.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        Intent intent = new Intent(getApplicationContext(), MypuppyTab.class);
-                        startActivity(intent);
-                        finish();
+                    if(set_flag == 0){
+                        Intent intent_Calendar = new Intent(getApplicationContext(), CalendarTab.class);
+                        startActivity(intent_Calendar);
+                    }else{
+                        Intent intent_mypuppy = new Intent(getApplicationContext(), MypuppyTab.class);
+                        startActivity(intent_mypuppy);
                     }
                 }
             }
@@ -314,6 +333,29 @@ public class SetPuppy extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(columnIndex);
+    }
+
+    private void UpdatePhoto() {
+        File file = new File(mediaPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String token = sp.getString("TOKEN", "");
+
+        service.profile(fileToUpload, token).enqueue(new Callback<ProfileResponse>() {
+            @Override
+            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+                ProfileResponse result = response.body();
+                //Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ProfileResponse> call, Throwable t) {
+                Toast.makeText(SetPuppy.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
+                Log.d("에러",  t.getMessage());
+            }
+        });
     }
 
 }

@@ -116,7 +116,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/jalnan"
             android:gravity="center"
-            android:text=" sat"
+            android:text="sat "
             android:textSize="17sp" />
 
     </LinearLayout>

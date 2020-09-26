@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +27,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
 
 import org.techtown.puppydiary.R;
 import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
@@ -146,9 +148,8 @@ public class CalendarDetail extends AppCompatActivity {
                             memo_et.setText(memo);
                         }
                         if (my.get(0).getPhoto() != null) {
-                            photo = my.get(0).getPhoto();
-                            Bitmap myBitmap = BitmapFactory.decodeFile(photo);
-                            image_upload.setImageBitmap(myBitmap);
+                            String requestURL = my.get(0).getPhoto();
+                            Glide.with(CalendarDetail.this).load(requestURL).into(image_upload);
                         }
                         state_waterdrop = my.get(0).getWater();
                         state_injection = my.get(0).getInject();
@@ -240,11 +241,6 @@ public class CalendarDetail extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE);
-                /*
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, 0);
-                 */
             }
         });
 
@@ -255,7 +251,7 @@ public class CalendarDetail extends AppCompatActivity {
                 memo = memo_et.getText().toString();
 //                Log.e("save",  mediaPath);
                 CalendarUpdate(new CalendarUpdateData(year, month, date, memo, state_injection, state_waterdrop));
-                //CalendarImage();
+                UpdatePhoto();
                 //finish();
             }
         });
@@ -270,57 +266,83 @@ public class CalendarDetail extends AppCompatActivity {
 
     }
 
-    private void CalendarImage() {
-        if (isImgFilled) {
-//아래 추가 한 코드입니다 ================
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode== REQUEST_CODE && resultCode==RESULT_OK && data!=null) {
+            selectedImage = data.getData();
+            Uri photoUri = data.getData();
+//            // img를 bitmap으로 받아옴
+//            InputStream in = null;
+//            try {
+//                in = getContentResolver().openInputStream(data.getData());
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            Bitmap bitmap = BitmapFactory.decodeStream(in);
+//
+//            bitmap = rotateImage(bitmap, 90);
+
+//            imageView.setImageBitmap(bitmap);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
+                bitmap = rotateImage(bitmap, 90);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //이미지가 한계이상(?) 크면 불러 오지 못하므로 사이즈를 줄여 준다.
+//            int nh = (int) (bitmap.getHeight() * (1024.0 / bitmap.getWidth()));
+//            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 1024, nh, true);
+            image_upload.setImageBitmap(bitmap);
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             Cursor cursor = getContentResolver().query(Uri.parse(selectedImage.toString()), null, null, null, null);
             assert cursor != null;
             cursor.moveToFirst();
             mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
             Log.d("경로 확인 >> ", "$selectedImg  /  $absolutePath");
 
-            MultipartBody.Builder builder = new MultipartBody.Builder();
-            builder.setType(MultipartBody.FORM);
-            Log.e("CalendarPhoto", "1");
-            builder.addFormDataPart("key", "profile");
-//       mediaPath = getRealPathFromURI()
-            builder.addFormDataPart("values", mediaPath);
-
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String token = sp.getString("TOKEN", "");
-
-            File file = new File(mediaPath);
-
-//                      RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestFile);
-            Toast.makeText(this, "사진 업로드 성공" + mediaPath, Toast.LENGTH_LONG).show();
-
-//            service = RetrofitClient.getClient().create(ServiceApi.class);
-//
-//            final Call<CalendarPhotoResponse> getCall = service.calendarphoto(fileToUpload, token, year, month, date);
-//            getCall.enqueue(new Callback<CalendarPhotoResponse>() {
-
-            service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
-
-                @Override
-                public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
-                    if (response.isSuccessful()) {
-                        CalendarPhotoResponse result = response.body();
-                        Toast.makeText(CalendarDetail.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
-                    Toast.makeText(CalendarDetail.this, "통신 실패", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
+        }else{
             Toast.makeText(this, "사진 업로드 실패", Toast.LENGTH_LONG).show();
         }
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    private void UpdatePhoto() {
+        File file = new File(mediaPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String token = sp.getString("TOKEN", "");
+
+        service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
+            @Override
+            public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
+                CalendarPhotoResponse result = response.body();
+                //Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
+                Toast.makeText(CalendarDetail.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
+                Log.d("에러",  t.getMessage());
+            }
+        });
+    }
 
     private void CalendarUpdate(CalendarUpdateData data) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -349,58 +371,4 @@ public class CalendarDetail extends AppCompatActivity {
         });
     }
 
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        String token = sp.getString("TOKEN", "");
-        if(requestCode== REQUEST_CODE && resultCode==RESULT_OK && data!=null) {
-            selectedImage = data.getData();
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Cursor cursor = getContentResolver().query(Uri.parse(selectedImage.toString()), null, null, null, null);
-            assert cursor != null;
-            cursor.moveToFirst();
-            mediaPath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-            Log.d("경로 확인 >> ", "$selectedImg  /  $absolutePath");
-
-
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String token = sp.getString("TOKEN", "");
-
-            File file = new File(mediaPath);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
-            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
-
-            Toast.makeText(this, "사진 업로드 성공" + mediaPath, Toast.LENGTH_LONG).show();
-
-            service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
-                @Override
-                public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
-                    CalendarPhotoResponse result = response.body();
-                    Toast.makeText(CalendarDetail.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-
-                @Override
-                public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
-                    Toast.makeText(CalendarDetail.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
-                    Log.d("에러",  t.getMessage());
-                }
-            });
-            Log.d("이미지", String.valueOf(selectedImage));
-
-        }else{
-            Toast.makeText(this, "사진 업로드 실패", Toast.LENGTH_LONG).show();
-        }
-
-    }
 }

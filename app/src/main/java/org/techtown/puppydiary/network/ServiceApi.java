@@ -1,48 +1,42 @@
 package org.techtown.puppydiary.network;
 
-import org.techtown.puppydiary.Login;
-import org.techtown.puppydiary.network.Data.EmailData;
-import org.techtown.puppydiary.network.Data.account.AccountUpdateData;
-import org.techtown.puppydiary.network.Data.calendar.CalendarPhotoData;
-import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
 import org.techtown.puppydiary.network.Data.CheckemailData;
 import org.techtown.puppydiary.network.Data.FindpwData;
-import org.techtown.puppydiary.network.Data.account.InsertAccountData;
 import org.techtown.puppydiary.network.Data.KgupdateData;
-import org.techtown.puppydiary.network.Data.ProfileData;
 import org.techtown.puppydiary.network.Data.RegisterData;
 import org.techtown.puppydiary.network.Data.SigninData;
 import org.techtown.puppydiary.network.Data.SignupData;
 import org.techtown.puppydiary.network.Data.UpdatepwData;
-import org.techtown.puppydiary.network.Response.EmailResponse;
-import org.techtown.puppydiary.network.Response.account.AccountUpdateResponse;
-import org.techtown.puppydiary.network.Response.calendar.CalendarPhotoResponse;
-import org.techtown.puppydiary.network.Response.calendar.CalendarUpdateResponse;
-import org.techtown.puppydiary.network.Response.account.CheckAccountResponse;
+import org.techtown.puppydiary.network.Data.account.AccountUpdateData;
+import org.techtown.puppydiary.network.Data.account.InsertAccountData;
+import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
 import org.techtown.puppydiary.network.Response.CheckemailResponse;
-import org.techtown.puppydiary.network.Response.account.DeleteAccountResponse;
+import org.techtown.puppydiary.network.Response.EmailResponse;
 import org.techtown.puppydiary.network.Response.FindpwResponse;
-import org.techtown.puppydiary.network.Response.account.InsertAccountResponse;
 import org.techtown.puppydiary.network.Response.KgupdateResponse;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.Response.ProfileResponse;
 import org.techtown.puppydiary.network.Response.RegisterResponse;
-import org.techtown.puppydiary.network.Response.account.ShowAccountResponse;
-import org.techtown.puppydiary.network.Response.calendar.ShowDayResponse;
 import org.techtown.puppydiary.network.Response.ShowKgResponse;
-import org.techtown.puppydiary.network.Response.calendar.ShowMonthResponse;
 import org.techtown.puppydiary.network.Response.SigninResponse;
 import org.techtown.puppydiary.network.Response.SignupResponse;
 import org.techtown.puppydiary.network.Response.UpdatepwResponse;
+import org.techtown.puppydiary.network.Response.account.AccountUpdateResponse;
+import org.techtown.puppydiary.network.Response.account.CheckAccountResponse;
+import org.techtown.puppydiary.network.Response.account.DeleteAccountResponse;
+import org.techtown.puppydiary.network.Response.account.InsertAccountResponse;
+import org.techtown.puppydiary.network.Response.account.ShowAccountResponse;
+import org.techtown.puppydiary.network.Response.calendar.CalendarPhotoResponse;
+import org.techtown.puppydiary.network.Response.calendar.CalendarUpdateResponse;
+import org.techtown.puppydiary.network.Response.calendar.ShowDayResponse;
+import org.techtown.puppydiary.network.Response.calendar.ShowMonthResponse;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -112,9 +106,9 @@ public interface ServiceApi {
     }
      */
 
-
+    @Multipart
     @POST("/user/profile") //프로필 사진 업데이트
-    Call<ProfileResponse> profile (@Header("token") String token, @Body ProfileData data);
+    Call<ProfileResponse> profile (@Part MultipartBody.Part profile, @Header("token") String token);
     /*
     form-date
     {
