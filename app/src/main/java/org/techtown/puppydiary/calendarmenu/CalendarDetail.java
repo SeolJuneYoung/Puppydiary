@@ -138,6 +138,7 @@ public class CalendarDetail extends AppCompatActivity {
                     List<ShowDayResponse.ShowDay> my = showday.getData();
 
                     if (my != null) {
+
                         if (my.get(0).getMemo() != null) {
                             memo = my.get(0).getMemo();
                             memo_et.setText(memo);
@@ -306,6 +307,32 @@ public class CalendarDetail extends AppCompatActivity {
     }
 
 
+    //사진 서버에 전송
+    private void UpdatePhoto() {
+
+        if(mediaPath != null) {
+            File file = new File(mediaPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String token = sp.getString("TOKEN", "");
+
+            service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
+                @Override
+                public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
+                }
+
+                @Override
+                public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
+                    Toast.makeText(CalendarDetail.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
+                    Log.d("에러", t.getMessage());
+                }
+            });
+        }
+    }
+
+
     //캘린더 내용 서버에 전송
     private void CalendarUpdate(CalendarUpdateData data) {
         //토큰 넘겨줌
@@ -333,29 +360,5 @@ public class CalendarDetail extends AppCompatActivity {
         });
     }
 
-    //사진 서버에 전송
-    private void UpdatePhoto() {
-
-        if(mediaPath != null) {
-            File file = new File(mediaPath);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
-            MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
-
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String token = sp.getString("TOKEN", "");
-
-            service.calendarphoto(fileToUpload, token, year, month, date).enqueue(new Callback<CalendarPhotoResponse>() {
-                @Override
-                public void onResponse(Call<CalendarPhotoResponse> call, Response<CalendarPhotoResponse> response) {
-                }
-
-                @Override
-                public void onFailure(Call<CalendarPhotoResponse> call, Throwable t) {
-                    Toast.makeText(CalendarDetail.this, "통신 실패요우아아아아아악!!!", Toast.LENGTH_SHORT).show();
-                    Log.d("에러", t.getMessage());
-                }
-            });
-        }
-    }
 
 }
