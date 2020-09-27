@@ -187,8 +187,8 @@ public class SetPuppy extends AppCompatActivity {
                     String puppyname = puppy_name.getText().toString();
                     Integer age = Integer.parseInt("" + age_.getText());
                     String birth = b_day.getText().toString();
-                    int gender = 0; // 1이 남자, 2가 여자
 
+                    int gender = 0; // 1이 남자, 2가 여자
                     if (option_male.isChecked() && (!option_female.isChecked())) {
                         gender = 1;
                     } else if ((!option_male.isChecked()) && option_female.isChecked()) {
@@ -243,8 +243,7 @@ public class SetPuppy extends AppCompatActivity {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 RegisterResponse result = response.body();
-//
-//                Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+
                 if(result.getMessage().equals("강아지 정보 등록에 성공하였습니다.")){
                     if(set_flag == 0){
                         Intent intent_Calendar = new Intent(getApplicationContext(), CalendarTab.class);
@@ -282,8 +281,6 @@ public class SetPuppy extends AppCompatActivity {
         service.profile(fileToUpload, token).enqueue(new Callback<ProfileResponse>() {
             @Override
             public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
-                ProfileResponse result = response.body();
-                //Toast.makeText(SetPuppy.this, result.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
