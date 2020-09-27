@@ -18,7 +18,14 @@ public class LoadingActivity extends AppCompatActivity {
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getSupportActionBar().hide();
+
         setContentView(R.layout.activity_main);
+
+        actionBar = getSupportActionBar();
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
+        getSupportActionBar().setTitle("댕댕이어리");
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         startLoading();
     }

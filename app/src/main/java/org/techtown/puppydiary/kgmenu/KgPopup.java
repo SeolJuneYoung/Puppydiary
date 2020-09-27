@@ -3,30 +3,24 @@ package org.techtown.puppydiary.kgmenu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import org.techtown.puppydiary.kgmenu.KgTab;
+
 import org.techtown.puppydiary.R;
-import org.techtown.puppydiary.kgmenu.DBHelper_kg;
 import org.techtown.puppydiary.network.Data.KgupdateData;
-import org.techtown.puppydiary.network.Data.UpdatepwData;
 import org.techtown.puppydiary.network.Response.KgupdateResponse;
+import org.techtown.puppydiary.network.Response.kgDeleteResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
@@ -34,7 +28,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static java.sql.DriverManager.println;
 import static org.techtown.puppydiary.kgmenu.KgTab.kg_month;
 import static org.techtown.puppydiary.kgmenu.KgTab.yearr;
 
@@ -42,30 +35,25 @@ public class KgPopup extends AppCompatActivity {
     String monthname;
     private  static Context context;
     ActionBar actionBar;
-    //public static double puppykg; public으로 설정을 해주어야 다른 클래스에서 사용 가능
     public static double puppykg;
     String kgStr;
     EditText weight;
     Button okay;
     Button close;
     int year;
+    int month;
     private ServiceApi service;
-    public int userIdx = 31;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //puppykg = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_kg_upload);
 
-        final DBHelper_kg dbHelper = new DBHelper_kg(getApplicationContext(), "KG.db", null, 1);
-
-        // MoneyEdit.context = getApplicationContext();
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.logo) ;
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -81,7 +69,6 @@ public class KgPopup extends AppCompatActivity {
         okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //button.setBackground(R.drawable.button_pressed);
                 okay.setBackgroundResource(R.drawable.button_pressed); //확인 버튼 클릭시 color changed -> 다른 버튼들에도 추가해주면 좋음
                 Intent intent_kgconfirm = new Intent(getApplicationContext(), KgTab.class);
                 startActivity(intent_kgconfirm);
@@ -90,83 +77,71 @@ public class KgPopup extends AppCompatActivity {
                 kgStr = weight.getText().toString();
                 //만약 jan의 kg 이 3.5 였다면 tostring으로 "3.5"=kgStr
 
-
-                //final Intent intent = new Intent(getIntent());
-                //final int year = intent.getIntExtra("year", 2020);
-
-                //Toast.makeText(getApplicationContext(), year + "입니다", Toast.LENGTH_LONG).show();
-
                 if(monthname.equals("January")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 1, puppykg);
+                    month = 1;
                     //double.parsedouble을 이용해서 string이었던 "3.5"를 double로 형변환시켜주어 저장 -> 저장 후 kgTab으로 가져감 (이 코드는 kgTab에 있음)
                 }
                 else if(monthname.equals("February")) {
                     puppykg = Double.parseDouble(kgStr);
-                    // dbHelper.insert(userIdx, year, 2, puppykg);
+                    month = 2;
                 }
                 else if(monthname.equals("March")) {
                     puppykg = Double.parseDouble(kgStr);
-                    // dbHelper.insert(userIdx, year, 3, puppykg);
+                    month = 3;
                 }
                 else if(monthname.equals("April")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 4, puppykg);
+                    month = 4;
                 }
                 else if(monthname.equals("May")) {
                     puppykg = Double.parseDouble(kgStr);
-                    // dbHelper.insert(userIdx, year, 5, puppykg);
+                    month = 5;
                 }
                 else if(monthname.equals("June")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 6, puppykg);
+                    month = 6;
                 }
                 else if(monthname.equals("July")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 7, puppykg);
+                    month = 7;
                 }
                 else if(monthname.equals("August")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 8, puppykg);
+                    month = 8;
                 }
                 else if(monthname.equals("September")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 9, puppykg);
+                    month = 9;
                 }
                 else if(monthname.equals("October")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 10, puppykg);
+                    month = 10;
                 }
                 else if(monthname.equals("November")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 11, puppykg);
+                    month = 11;
                 }
                 else if(monthname.equals("December")) {
                     puppykg = Double.parseDouble(kgStr);
-                    //dbHelper.insert(userIdx, year, 12, puppykg);
+                    month = 12;
                 }
 
-                UpdateKg(new KgupdateData(year, monthname, puppykg));
-
-                Intent intent_kgclose = new Intent(KgPopup.this, KgTab.class); //년도 전달함
-                intent_kgclose.putExtra("year", year);
-                startActivity(intent_kgclose);
-
-                //Log.d("kg1", "kg1" + kgStr);
-                //Log.d("kg2", "kg2" + ((EditText)findViewById(R.id.kg_weight)).getText().toString());
-                //Log.d("kgpopup", "kgpopup ." + puppykg);
+                UpdateKg(new KgupdateData(year, month, puppykg));
             }
         });
 
-        close = findViewById(R.id.close);
+        close = findViewById(R.id.close); // 삭제 버튼
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                close.setBackgroundColor( Color.parseColor("#D6336B"));
+                close.setBackgroundColor( Color.parseColor("#ed426e"));
+                DeleteKG(year, month);
                 Intent intent_kgclose = new Intent(getApplicationContext(), KgTab.class); //일단 바로 검색결과 띄음
                 startActivity(intent_kgclose);
             }
         });
+
     }
 
     private void UpdateKg(KgupdateData data){
@@ -181,15 +156,40 @@ public class KgPopup extends AppCompatActivity {
 
                 if(result.getSuccess() == true){
                     Intent intent_start = new Intent(getApplicationContext(), KgTab.class);
+                    intent_start.putExtra("year",year);
                     startActivityForResult(intent_start, 2000);
                 }
             }
 
             @Override
             public void onFailure(Call<KgupdateResponse> call, Throwable t) {
-                Toast.makeText(KgPopup.this, "체중 업데이트 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(KgPopup.this, "체중 업데이트 에러가 발생하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("체중 업데이트 에러 발생", t.getMessage());
             }
+        });
+    }
+
+    private void  DeleteKG(int year_D, int month_D){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String token = sp.getString("TOKEN", "");
+        service.kgdelete(token, year_D, month_D).enqueue(new Callback<kgDeleteResponse>() {
+            @Override
+            public void onResponse(Call<kgDeleteResponse> call, Response<kgDeleteResponse> response) {
+                kgDeleteResponse result = response.body();
+                Toast.makeText(KgPopup.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+
+                if(result.getSuccess() == true){
+                    Intent intent_start = new Intent(getApplicationContext(), KgTab.class);
+                    intent_start.putExtra("year",year);
+                    startActivityForResult(intent_start, 2000);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<kgDeleteResponse> call, Throwable t) {
+                Toast.makeText(KgPopup.this, "체중 삭제 에러가 발생했습니다.", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 }

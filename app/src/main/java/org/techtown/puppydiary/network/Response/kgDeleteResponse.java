@@ -1,13 +1,10 @@
-package org.techtown.puppydiary.network.Response.account;
+package org.techtown.puppydiary.network.Response;
 
-import com.google.gson.JsonObject;
+public class kgDeleteResponse {
 
-public class CheckAccountResponse {
     private int status;
     private boolean success;
     private String message;
-    private int data;
-    private int idaccount;
 
     public int getStatus(){
         return status;
@@ -21,5 +18,5 @@ public class CheckAccountResponse {
         return message;
     }
 
-    public int getData(){ return data; }
+
 }

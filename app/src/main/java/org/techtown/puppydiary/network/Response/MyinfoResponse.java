@@ -1,6 +1,5 @@
 package org.techtown.puppydiary.network.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyinfoResponse {
@@ -31,6 +30,7 @@ public class MyinfoResponse {
         private String puppyname;
         private int age;
         private String birth;
+        private String profile;
         private int gender;
 
         public String getImage(){
@@ -49,6 +49,10 @@ public class MyinfoResponse {
 
         public int getGender(){
             return gender;
+        }
+
+        public String getProfile(){
+            return profile;
         }
     }
 }

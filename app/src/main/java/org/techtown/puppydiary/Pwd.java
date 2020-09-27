@@ -43,7 +43,6 @@ public class Pwd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pwd);
 
-        //MoneyEdit.context = getApplicationContext();
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
@@ -136,47 +135,6 @@ public class Pwd extends AppCompatActivity {
                 ChangePassword(new UpdatepwData(old1, new1, new2));
             }
         });
-
-        // 완료 버튼 누르면 새로운 비밀번호 확인함.
-
-        // 기존 비밀번호 맞는지 확인하고 새로운 비밀번호로 업데이트 하는 거 적어야함
-/*
-        final EditText old_pwd = findViewById(R.id.old_pwd);
-        final EditText pwd_new = findViewById(R.id.new_pwd);
-        final EditText pwd_ck = findViewById(R.id.new_chk);
-
-
-        Button new_fsh = findViewById(R.id.pwd_finish);
-        new_fsh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String old1 = old_pwd.getText().toString();
-                String new1 = pwd_new.getText().toString();
-                String new2 = pwd_ck.getText().toString();
-
-                if ( old1.equals("") ){
-                    Toast.makeText(getApplicationContext(), "기존 비밀번호를 입력하세요", Toast.LENGTH_LONG).show();
-                }
-                else if ( new1.equals("") ) {
-                    Toast.makeText(getApplicationContext(), "새로운 비밀번호를 입력하세요", Toast.LENGTH_LONG).show();
-                }
-                else if ( new2.equals("") ) {
-                    Toast.makeText(getApplicationContext(), "새로운 비밀번호 확인칸을 입력하세요", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    if (new1.equals(new2)) {
-                        Intent intent = new Intent(getApplicationContext(), MypuppyTab.class);
-                        startActivity(intent);
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            }
-        });
-
- */
     }
 
     public void ChangePassword(UpdatepwData data){
@@ -197,7 +155,7 @@ public class Pwd extends AppCompatActivity {
             @Override
             public void onFailure(Call<UpdatepwResponse> call, Throwable t) {
                 finish.setBackgroundColor( Color.parseColor("#FDFAFA"));
-                Toast.makeText(Pwd.this, "비밀번호 변경 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Pwd.this, "비밀번호 변경 에러가 발생했습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("비밀번호 변경 에러 발생", t.getMessage());
             }
         });

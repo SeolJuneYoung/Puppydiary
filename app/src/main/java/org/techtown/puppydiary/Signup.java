@@ -1,13 +1,14 @@
 package org.techtown.puppydiary;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,16 +16,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.techtown.puppydiary.network.Data.CheckemailData;
-import org.techtown.puppydiary.network.Data.SigninData;
 import org.techtown.puppydiary.network.Data.SignupData;
 import org.techtown.puppydiary.network.Response.CheckemailResponse;
-import org.techtown.puppydiary.network.Response.MyinfoResponse;
-import org.techtown.puppydiary.network.Response.SigninResponse;
 import org.techtown.puppydiary.network.Response.SignupResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +28,7 @@ import retrofit2.Response;
 
 public class Signup extends AppCompatActivity {
 
-    public static int set_flag;
+    public static int set_flag = 0;
     ActionBar actionBar;
     private ServiceApi service;
     private EditText email_check;
@@ -58,11 +54,7 @@ public class Signup extends AppCompatActivity {
         pwd_check = findViewById(R.id.tv_password);
         pwd_cfr = findViewById(R.id.tv_passwordcheck);
 
-        //final String email = email_check.getText().toString();
-        //final String pwd = pwd_check.getText().toString();
-        //final String pwd_C = pwd_cfr.getText().toString();
-
-        // 중복 확인 버튼 눌렀을 때 (작성해야함)
+        // 중복 확인 버튼 눌렀을 때
         Button btn_check = findViewById(R.id.btn_emailcheck);
         btn_check.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +65,7 @@ public class Signup extends AppCompatActivity {
             }
         });
 
-        // 회원가입 버튼 눌렀을 때 (작성해야함)
+        // 회원가입 버튼 눌렀을 때
         Button btn_sign = findViewById(R.id.btn_signup);
         btn_sign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +92,7 @@ public class Signup extends AppCompatActivity {
             }
 
             @Override public void onFailure(Call<CheckemailResponse> call, Throwable t) {
-                Toast.makeText(Signup.this, "이메일 중복 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Signup.this, "이메일이 중복되었습니다", Toast.LENGTH_SHORT).show();
                 Log.e("이메일 중복 에러 발생", t.getMessage());
             }
         });
@@ -114,6 +106,13 @@ public class Signup extends AppCompatActivity {
                 Toast.makeText(Signup.this, result.getMessage(), Toast.LENGTH_SHORT).show();
 
                 if (result.getSuccess() == true) {
+
+                    String jwtToken = result.getJwtToken();
+
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("TOKEN", jwtToken).apply();
+
                     Intent intent = new Intent(getApplicationContext(), SetPuppy.class);
                     startActivity(intent);
                     finish();
@@ -122,7 +121,7 @@ public class Signup extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SignupResponse> call, Throwable t) {
-                Toast.makeText(Signup.this, "회원가입 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Signup.this, "회원가입 에러가 발생하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("회원가입 에러 발생", t.getMessage());
             }
         });

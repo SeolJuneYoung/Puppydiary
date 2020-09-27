@@ -2,7 +2,6 @@ package org.techtown.puppydiary;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -63,7 +62,7 @@ public class Login extends AppCompatActivity {
         button_lgn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button_lgn.setBackgroundColor( Color.parseColor("#D6336B"));
+                button_lgn.setBackgroundColor( Color.parseColor("#ed426e"));
                 email = emailview.getText().toString();
                 password = passwordview.getText().toString();
                 startLogin(new SigninData(email, password));
@@ -104,18 +103,6 @@ public class Login extends AppCompatActivity {
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("TOKEN", jwtToken).apply();
-
-
-                    //("Context-Type = application/
-
-                    //int useridx = result.getUserIdx();
-
-                    //result.save(getApplicationContext());
-
-                    //DBHelper_user dbuser = new DBHelper_user(getApplicationContext(), "usertest.db", null, 1);
-
-                    //각 db에 insert useridx
-                    //dbuser.insert(useridx);
 
                     //달력 탭으로 시작
                     Intent intent_start = new Intent(getApplicationContext(), CalendarTab.class);

@@ -8,54 +8,43 @@ import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import static org.techtown.puppydiary.Signup.set_flag;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.bumptech.glide.Glide;
 
-import org.json.JSONObject;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
 import org.techtown.puppydiary.kgmenu.KgTab;
-import org.techtown.puppydiary.network.Data.MyinfoData;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static org.techtown.puppydiary.Signup.set_flag;
+
 public class MypuppyTab extends AppCompatActivity {
     ActionBar actionBar;
-
+    ImageView photoprofile;
     private ServiceApi service;
-    private Call<MyinfoResponse> infodata;
-
-    //public static String ;
-    // public static Context context;
+    de.hdodenhof.circleimageview.CircleImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypuppy);
 
-        //MoneyEdit.context = getApplicationContext();
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
@@ -138,8 +127,7 @@ public class MypuppyTab extends AppCompatActivity {
         final TextView birth_ = findViewById(R.id.bd_input);
         final RadioButton option_male = (RadioButton) findViewById(R.id.male);
         final RadioButton option_female = (RadioButton) findViewById(R.id.female);
-
-        //mypuppyInfo();
+        imageView = findViewById(R.id.profile);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String token = sp.getString("TOKEN", "");
@@ -151,20 +139,23 @@ public class MypuppyTab extends AppCompatActivity {
                     MyinfoResponse myinfo = response.body();
                     List<MyinfoResponse.Myinfo> my = myinfo.getData();
 
-                    String result = "";
-
                     for(MyinfoResponse.Myinfo myinfo1 : my) {
+
+                        String requestURL = my.get(0).getImage();
+                        Log.d("requestURL", requestURL);
+                        Glide.with(MypuppyTab.this).load(requestURL).into(imageView);
+
                         if( myinfo1.getPuppyname().equals("") ){
-                            puppy_name.setText("ihi");
+                            puppy_name.setText("댕댕이");
                         }
                         else {
                             puppy_name.setText(myinfo1.getPuppyname());
                         }
 
-                        age_.setText("" + myinfo1.getAge()+ "살");
+                        age_.setText("" + myinfo1.getAge());
 
-                        if(myinfo1.getBirth() == null){
-                            birth_.setText("24살");
+                        if(myinfo1.getBirth().equals("")){
+                            birth_.setText("몇살인가요?");
                         }
                         else {
                             birth_.setText(myinfo1.getBirth());
@@ -177,11 +168,8 @@ public class MypuppyTab extends AppCompatActivity {
                         else if ( gender == 2) {
                             option_female.setChecked(true);
                         }
-
-                        // result = myinfo1.getPuppyname();
-                        // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();;
+                        Log.d("profileURL",  requestURL);
                     }
-
                 }
             }
 
@@ -191,5 +179,4 @@ public class MypuppyTab extends AppCompatActivity {
             }
         });
     }
-
 }

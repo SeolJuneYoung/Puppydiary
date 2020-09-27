@@ -12,7 +12,7 @@
         android:layout_height="63dp"
         android:background="#FDFAFA"
         android:fontFamily="@font/jalnan"
-        android:text="취소"
+        android:text="삭제"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

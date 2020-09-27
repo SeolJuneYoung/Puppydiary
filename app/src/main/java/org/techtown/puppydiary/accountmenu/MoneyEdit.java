@@ -58,7 +58,7 @@ public class MoneyEdit extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.logo) ;
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -143,7 +143,7 @@ public class MoneyEdit extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AccountUpdateResponse> call, Throwable t) {
-                Toast.makeText(MoneyEdit.this, "가계부 수정 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MoneyEdit.this, "가계부 수정 에러가 발생하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("가계부 수정 에러 발생", t.getMessage());
             }
         });
@@ -168,7 +168,7 @@ public class MoneyEdit extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DeleteAccountResponse> call, Throwable t) {
-                Toast.makeText(MoneyEdit.this, "가계부 삭제 에러 발생", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MoneyEdit.this, "가계부 삭제 에러가 발생하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("가계부 삭제 에러 발생", t.getMessage());
             }
         });

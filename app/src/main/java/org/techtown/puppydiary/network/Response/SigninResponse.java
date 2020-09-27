@@ -42,19 +42,4 @@ public class SigninResponse {
         jwtToken = data.getAsJsonObject().get("jwtToken").getAsString();
         return jwtToken;
     }
-
-    /*
-    public void save(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("USERIDX", userIdx).apply();
-    }
-
-    public int load(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt("USERIDX", 0);
-    }
-     */
-
-
 }

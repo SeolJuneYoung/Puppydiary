@@ -4,11 +4,9 @@ import org.techtown.puppydiary.Login;
 import org.techtown.puppydiary.network.Response.UpdatepwResponse;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 
 public class RetrofitClient {
@@ -31,9 +29,5 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().
-            setLevel(HttpLoggingInterceptor.Level.BODY);
-
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
 }
