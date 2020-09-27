@@ -107,7 +107,7 @@ public interface ServiceApi {
     Call<KgupdateResponse> kgupdate (@Header("token") String token, @Body KgupdateData data);
 
 
-    @POST("/kg/delete/{year}/{month}") // KG Delete
+    @DELETE("/kg/delete/{year}/{month}") // KG Delete
     Call<kgDeleteResponse> kgdelete (@Header("token") String token, @Path("year") int year, @Path("month") int month);
 
 

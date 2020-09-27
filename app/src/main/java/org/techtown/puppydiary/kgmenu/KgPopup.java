@@ -136,6 +136,44 @@ public class KgPopup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 close.setBackgroundColor( Color.parseColor("#ed426e"));
+
+                if(monthname.equals("January")) {
+                    month = 1;
+                }
+                else if(monthname.equals("February")) {
+                    month = 2;
+                }
+                else if(monthname.equals("March")) {
+                    month = 3;
+                }
+                else if(monthname.equals("April")) {
+                    month = 4;
+                }
+                else if(monthname.equals("May")) {
+                    month = 5;
+                }
+                else if(monthname.equals("June")) {
+                    month = 6;
+                }
+                else if(monthname.equals("July")) {
+                    month = 7;
+                }
+                else if(monthname.equals("August")) {
+                    month = 8;
+                }
+                else if(monthname.equals("September")) {
+                    month = 9;
+                }
+                else if(monthname.equals("October")) {
+                    month = 10;
+                }
+                else if(monthname.equals("November")) {
+                    month = 11;
+                }
+                else if(monthname.equals("December")) {
+                    month = 12;
+                }
+
                 DeleteKG(year, month);
                 Intent intent_kgclose = new Intent(getApplicationContext(), KgTab.class); //일단 바로 검색결과 띄음
                 startActivity(intent_kgclose);
