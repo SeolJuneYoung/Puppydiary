@@ -3,29 +3,22 @@ package org.techtown.puppydiary.kgmenu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import org.techtown.puppydiary.kgmenu.KgTab;
+
 import org.techtown.puppydiary.R;
-import org.techtown.puppydiary.kgmenu.DBHelper_kg;
 import org.techtown.puppydiary.network.Data.KgupdateData;
-import org.techtown.puppydiary.network.Data.UpdatepwData;
 import org.techtown.puppydiary.network.Response.KgupdateResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
@@ -34,7 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static java.sql.DriverManager.println;
 import static org.techtown.puppydiary.kgmenu.KgTab.kg_month;
 import static org.techtown.puppydiary.kgmenu.KgTab.yearr;
 
@@ -66,7 +58,7 @@ public class KgPopup extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy) ;
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 

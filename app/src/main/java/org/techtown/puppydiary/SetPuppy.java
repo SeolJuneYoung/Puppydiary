@@ -1,12 +1,12 @@
 package org.techtown.puppydiary;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,27 +28,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
 import com.bumptech.glide.Glide;
 
-import org.techtown.puppydiary.calendarmenu.CalendarDetail;
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
-import org.techtown.puppydiary.network.Data.ProfileData;
 import org.techtown.puppydiary.network.Data.RegisterData;
-import org.techtown.puppydiary.network.Data.calendar.CalendarUpdateData;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.Response.ProfileResponse;
 import org.techtown.puppydiary.network.Response.RegisterResponse;
-import org.techtown.puppydiary.network.Response.calendar.CalendarPhotoResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +54,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import static org.techtown.puppydiary.Signup.set_flag;
 //import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -85,13 +78,22 @@ public class SetPuppy extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy) ;
-        actionBar.setDisplayUseLogoEnabled(true) ;
-        actionBar.setDisplayShowHomeEnabled(true) ;
+        actionBar.setIcon(R.drawable.logo);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
 
         HashMap<String, String>header = new HashMap<>();
         service = RetrofitClient.getClient().create(ServiceApi.class);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
+        }
 
         TextView textView = findViewById(R.id.textView);
         SpannableString content = new SpannableString("우리 집 댕댕이는요");
@@ -186,7 +188,6 @@ public class SetPuppy extends AppCompatActivity {
                         // result = myinfo1.getPuppyname();
                         // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();;
                     }
-
                 }
             }
 
@@ -200,7 +201,7 @@ public class SetPuppy extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                button.setBackgroundColor( Color.parseColor("#ed426e"));
+                button.setBackgroundColor( Color.parseColor("#D6336B"));
 
 
                 if( !(puppy_name.getText().equals(""))) {
@@ -241,7 +242,7 @@ public class SetPuppy extends AppCompatActivity {
 
         if(requestCode== REQUEST_CODE && resultCode==RESULT_OK && data!=null) {
             selectedImage = data.getData();
-            Uri photoUri = data.getData();
+
 //            // img를 bitmap으로 받아옴
 //            InputStream in = null;
 //            try {
@@ -254,6 +255,7 @@ public class SetPuppy extends AppCompatActivity {
 //            bitmap = rotateImage(bitmap, 90);
 
 //            imageView.setImageBitmap(bitmap);
+            Uri photoUri = data.getData();
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),photoUri);
@@ -265,12 +267,12 @@ public class SetPuppy extends AppCompatActivity {
 //            int nh = (int) (bitmap.getHeight() * (1024.0 / bitmap.getWidth()));
 //            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 1024, nh, true);
             imageView.setImageBitmap(bitmap);
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//
+//            try {
+//                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             Cursor cursor = getContentResolver().query(Uri.parse(selectedImage.toString()), null, null, null, null);
             assert cursor != null;
@@ -347,6 +349,7 @@ public class SetPuppy extends AppCompatActivity {
     }
 
     private void UpdatePhoto() {
+        if(mediaPath != null){
         File file = new File(mediaPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("profile", file.getName(), requestBody);
@@ -367,6 +370,6 @@ public class SetPuppy extends AppCompatActivity {
                 Log.d("에러",  t.getMessage());
             }
         });
-    }
+    }}
 
 }

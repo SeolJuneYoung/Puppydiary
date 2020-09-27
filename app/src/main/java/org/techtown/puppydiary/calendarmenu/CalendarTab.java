@@ -7,9 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,10 +23,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.techtown.puppydiary.kgmenu.KgTab;
 import org.techtown.puppydiary.MypuppyTab;
 import org.techtown.puppydiary.R;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
+import org.techtown.puppydiary.kgmenu.KgTab;
 import org.techtown.puppydiary.network.Data.calendar.ShowDayData;
 import org.techtown.puppydiary.network.Response.calendar.ShowDayResponse;
 import org.techtown.puppydiary.network.Response.calendar.ShowMonthResponse;
@@ -93,14 +93,13 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.name);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -190,7 +189,7 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
         lastMonthStartDay -= (dayOfMonth - 1) - 1;
 
         // 캘린더 타이틀(년월 표시)을 세팅
-        tvDate.setText((mCal.get(Calendar.MONTH)+1) + "월");
+        tvDate.setText((mCal.get(Calendar.YEAR))+ ". " + (mCal.get(Calendar.MONTH)+1) + "월월!");
 
         year = mCal.get(Calendar.YEAR);
 
@@ -310,7 +309,12 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
             ViewHolder holder = null;
             if (convertView == null) {
                 convertView = minflater.inflate(mresource, null);
-                convertView.setLayoutParams(new GridView.LayoutParams(1080 / 7 + 1080 % 7, 200));
+
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                int screenW = metrics.widthPixels;
+                int screenH = metrics.heightPixels;
+                convertView.setLayoutParams(new GridView.LayoutParams(screenW/7 + screenW%7, screenH/8));
+
                 holder = new ViewHolder();
                 holder.tvItem = (TextView) convertView.findViewById(R.id.tv_item_gridview);
                 holder.waterdrop = (ImageView) convertView.findViewById(R.id.waterdrop);
@@ -391,7 +395,6 @@ public class CalendarTab extends AppCompatActivity implements View.OnClickListen
             public ImageView waterdrop;
             public ImageView injection;
             public TextView tvItem;
-
         }
 
     }

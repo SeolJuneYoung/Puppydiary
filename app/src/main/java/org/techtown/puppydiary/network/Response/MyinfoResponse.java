@@ -1,6 +1,5 @@
 package org.techtown.puppydiary.network.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyinfoResponse {

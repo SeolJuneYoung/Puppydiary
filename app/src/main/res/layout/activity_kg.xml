@@ -76,12 +76,12 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="19dp" />
+                android:layout_height="25dp" />
 
             <Button
                 android:id="@+id/jan"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -91,7 +91,7 @@
             <Button
                 android:id="@+id/feb"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -101,7 +101,7 @@
             <Button
                 android:id="@+id/mar"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -111,7 +111,7 @@
             <Button
                 android:id="@+id/apr"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -121,7 +121,7 @@
             <Button
                 android:id="@+id/may"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -131,7 +131,7 @@
             <Button
                 android:id="@+id/jun"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -141,7 +141,7 @@
             <Button
                 android:id="@+id/jul"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -151,7 +151,7 @@
             <Button
                 android:id="@+id/aug"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -161,7 +161,7 @@
             <Button
                 android:id="@+id/sep"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -171,7 +171,7 @@
             <Button
                 android:id="@+id/oct"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -181,7 +181,7 @@
             <Button
                 android:id="@+id/nov"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
@@ -191,12 +191,16 @@
             <Button
                 android:id="@+id/dec"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_weight="1"
                 android:background="#F9F9F9"
                 android:fontFamily="@font/jalnan"
                 android:text="Dec"
                 android:textSize="15sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
 
 
         </LinearLayout>
@@ -206,13 +210,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/calendar" />
 

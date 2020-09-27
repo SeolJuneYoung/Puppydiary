@@ -3,10 +3,6 @@ package org.techtown.puppydiary.kgmenu;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,28 +13,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.techtown.puppydiary.MypuppyTab;
 import org.techtown.puppydiary.R;
-import org.techtown.puppydiary.accountmenu.MoneyEdit;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
-import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.Response.ShowKgResponse;
-import org.techtown.puppydiary.network.Response.account.CheckAccountResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,7 +100,7 @@ public class KgTab extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.name) ;
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
 
@@ -674,7 +669,6 @@ public class KgTab extends AppCompatActivity {
         //Log.d("kg", "kg ." + puppyjan);
         ArrayList<BarEntry> entries = new ArrayList();
         entries.add(new BarEntry(12f, (float) jan_kg));
-        Log.e("+jan" , String.valueOf(jan_kg));
         entries.add(new BarEntry(11f, (float) feb_kg));
         entries.add(new BarEntry(10f, (float) mar_kg));
         entries.add(new BarEntry(9f, (float) apr_kg));

@@ -2,54 +2,37 @@ package org.techtown.puppydiary;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import static org.techtown.puppydiary.Signup.set_flag;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 import org.techtown.puppydiary.accountmenu.MoneyTab;
 import org.techtown.puppydiary.calendarmenu.CalendarTab;
 import org.techtown.puppydiary.kgmenu.KgTab;
-import org.techtown.puppydiary.network.Data.MyinfoData;
 import org.techtown.puppydiary.network.Response.MyinfoResponse;
 import org.techtown.puppydiary.network.RetrofitClient;
 import org.techtown.puppydiary.network.ServiceApi;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static org.techtown.puppydiary.Signup.set_flag;
 
 public class MypuppyTab extends AppCompatActivity {
     ActionBar actionBar;
@@ -69,7 +52,7 @@ public class MypuppyTab extends AppCompatActivity {
         actionBar = getSupportActionBar();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffD6336B));
         getSupportActionBar().setTitle("댕댕이어리");
-        actionBar.setIcon(R.drawable.white_puppy);
+        actionBar.setIcon(R.drawable.logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -148,7 +131,7 @@ public class MypuppyTab extends AppCompatActivity {
         final TextView birth_ = findViewById(R.id.bd_input);
         final RadioButton option_male = (RadioButton) findViewById(R.id.male);
         final RadioButton option_female = (RadioButton) findViewById(R.id.female);
-       // photoprofile = (ImageView) findViewById(R.id.profile);
+        // photoprofile = (ImageView) findViewById(R.id.profile);
         imageView = findViewById(R.id.profile);
         //mypuppyInfo();
 
@@ -227,7 +210,6 @@ public class MypuppyTab extends AppCompatActivity {
                         // result = myinfo1.getPuppyname();
                         // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();;
                     }
-
                 }
             }
 
